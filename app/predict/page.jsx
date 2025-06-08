@@ -1,12 +1,14 @@
 'use client';
 
 import { CloseOutlined, InboxOutlined } from '@ant-design/icons';
-import { Button, Image, Typography } from 'antd';
+import { Button, Divider, Image, Typography } from 'antd';
 import Dragger from 'antd/es/upload/Dragger';
 import axios from 'axios';
 import { useState } from 'react';
 
 export default function Predict() {
+  const tagline = 'Cek Kulit Wajah Gratis Online';
+
   const [image, setImage] = useState(false);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -58,35 +60,10 @@ export default function Predict() {
       <div className="w-full overflow-hidden px-12 py-8 sm:max-w-2xl sm:rounded-lg sm:bg-white sm:shadow-md lg:max-w-4xl xl:max-w-6xl">
         <div className="py-16">
           <div className="mx-auto max-w-lg space-y-8">
-            {submitted ? (
+            {!submitted ? (
               <>
                 <Typography.Title className="block text-center" level={3}>
-                  Hasil Analisis
-                </Typography.Title>
-
-                <div className="flex w-full items-center space-x-6 rounded-xl border p-6">
-                  <Image
-                    width={240}
-                    src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-                  />
-                  <div className="grow text-center">
-                    <Typography.Title level={4}>Normal</Typography.Title>
-                  </div>
-                </div>
-
-                <div className="flex space-x-6">
-                  <Button size="large" disabled={!image} onClick={() => submit(false)} block>
-                    Analisis Ulang
-                  </Button>
-                  <Button type="primary" size="large" disabled={!image} block>
-                    Kirim Feedback
-                  </Button>
-                </div>
-              </>
-            ) : (
-              <>
-                <Typography.Title className="block text-center" level={3}>
-                  RupaKoe: AI untuk Analisis Wajah Anda
+                  RupaKoe: {tagline}
                 </Typography.Title>
 
                 <div>
@@ -98,7 +75,7 @@ export default function Predict() {
                       />
                       <Button
                         type="link"
-                        className="absolute right-0 top-0 w-0"
+                        className="!absolute right-0 top-0 w-0"
                         onClick={() => setImage(false)}
                       >
                         <CloseOutlined />
@@ -128,6 +105,39 @@ export default function Predict() {
                 >
                   Submit
                 </Button>
+              </>
+            ) : (
+              <>
+                <Typography.Title className="block text-center" level={3}>
+                  Hasil Analisis
+                </Typography.Title>
+
+                <div className="w-full space-x-4 rounded-xl border p-6">
+                  <div className="flex space-x-6 items-center">
+                    <Image
+                      width={240}
+                      src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                    />
+                    <div className="grow text-center">
+                      <Typography.Title level={4}>Normal</Typography.Title>
+                    </div>
+                  </div>
+                  <Divider className="!border-gray-400">Bahan skin care yang paling cocok untukmu</Divider>
+                  <ol className="list-decimal list-inside">
+                    <li>Test</li>
+                    <li>Test</li>
+                    <li>Test</li>
+                  </ol>
+                </div>
+
+                <div className="flex space-x-6">
+                  <Button size="large" disabled={!image} onClick={() => submit(false)} block>
+                    Analisis Ulang
+                  </Button>
+                  <Button type="primary" size="large" disabled={!image} block>
+                    Kirim Feedback
+                  </Button>
+                </div>
               </>
             )}
           </div>
