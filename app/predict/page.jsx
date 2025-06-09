@@ -1,87 +1,74 @@
 'use client';
 
+import { useState } from 'react';
 import { CloseOutlined, InboxOutlined } from '@ant-design/icons';
 import { Button, Divider, Image, Typography } from 'antd';
-import Dragger from 'antd/es/upload/Dragger';
 import axios from 'axios';
-import { useState } from 'react';
+import Dragger from 'antd/es/upload/Dragger';
 
 export default function Predict() {
+  const predictUrl = process.env.NEXT_PUBLIC_API_URL;
   const tagline = 'Cek Kulit Wajah Gratis Online';
 
-  const [image, setImage] = useState(false);
+  const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-
-  const submit = (status) => {
-    if (status) {
-      setLoading(true);
-      setTimeout(() => {
-        setSubmitted(true);
-        setLoading(false);
-      }, 2000);
-    } else {
-      setImage(false);
-      setSubmitted(false);
-    }
-  };
+  const [prediction, setPrediction] = useState(null);
 
   const props = {
     name: 'file',
     accept: '.jpg,.jpeg,.png',
     multiple: false,
-    action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
-    onChange(info) {
-      const { status } = info.file;
-      if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (status === 'done' || status === 'error') {
-        setImage(true);
-      }
-      console.log(status);
-    },
-    onDrop(e) {
-      console.log('Dropped files', e.dataTransfer.files);
-    },
+    beforeUpload: ((file) => {
+      const url = URL.createObjectURL(file);
+      setImageUrl(url);
+      setImage(file);
+      return false; // Prevent auto upload
+    }),
   };
 
-  axios
-    .get('http://localhost:5000', {
-      headers: {
-        'Content-Type': 'application/json',  // Only set necessary client headers
-      },
-    })
-    .then((res) => console.log(res))
-    .catch((error) => console.error("Error:", error));
+  const submit = (status) => {
+    if (status) {
+      setLoading(true);
+      axios
+        .post(`${predictUrl}/predict`, { file: image }, {
+          headers: {
+            'Content-Type': 'multipart/form-data',  // Only set necessary client headers
+          },
+        })
+        .then((res) => {
+          if (res.data.status === 'success') {
+            const probability = Math.max(...res.data.data.prob);
+            const index = res.data.data.prob.findIndex((x) => x === probability);
+            setPrediction({
+              result: res.data.data.classes[index],
+              percentage: (probability * 100).toPrecision(3) + '%',
+            });
+          } else {
+
+          }
+        })
+        .catch((error) => console.error("Error:", error))
+        .finally(() => setLoading(false));
+    } else {
+      setImage(null);
+      setPrediction(null);
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-gray-100 sm:justify-center sm:pt-0">
       <div className="w-full overflow-hidden px-12 py-8 sm:max-w-2xl sm:rounded-lg sm:bg-white sm:shadow-md lg:max-w-4xl xl:max-w-6xl">
         <div className="py-16">
           <div className="mx-auto max-w-lg space-y-8">
-            {!submitted ? (
+            {!prediction ? (
               <>
                 <Typography.Title className="block text-center" level={3}>
                   RupaKoe: {tagline}
                 </Typography.Title>
 
                 <div>
-                  {image ? (
-                    <div className="relative w-full rounded-xl border py-6 text-center">
-                      <Image
-                        width={240}
-                        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-                      />
-                      <Button
-                        type="link"
-                        className="!absolute right-0 top-0 w-0"
-                        onClick={() => setImage(false)}
-                      >
-                        <CloseOutlined />
-                      </Button>
-                    </div>
-                  ) : (
+                  {!image ? (
                     <Dragger {...props}>
                       <p className="ant-upload-drag-icon">
                         <InboxOutlined />
@@ -92,6 +79,23 @@ export default function Predict() {
                         company data or other banned files.
                       </p>
                     </Dragger>
+                  ) : (
+                    <div className="relative w-full rounded-xl border py-6 text-center">
+                      <Image
+                        width={400}
+                        src={imageUrl}
+                      />
+                      <Button
+                        type="link"
+                        className="!absolute right-0 top-0 w-0"
+                        onClick={() => {
+                          setImage(null);
+                          setImageUrl(null);
+                        }}
+                      >
+                        <CloseOutlined />
+                      </Button>
+                    </div>
                   )}
                 </div>
 
@@ -108,7 +112,7 @@ export default function Predict() {
               </>
             ) : (
               <>
-                <Typography.Title className="block text-center" level={3}>
+                <Typography.Title className="block text-center" level={2}>
                   Hasil Analisis
                 </Typography.Title>
 
@@ -116,10 +120,11 @@ export default function Predict() {
                   <div className="flex space-x-6 items-center">
                     <Image
                       width={240}
-                      src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                      src={imageUrl}
                     />
                     <div className="grow text-center">
-                      <Typography.Title level={4}>Normal</Typography.Title>
+                      <Typography.Title level={3}>{prediction.result}</Typography.Title>
+                      <Typography.Title level={4}>{prediction.percentage}</Typography.Title>
                     </div>
                   </div>
                   <Divider className="!border-gray-400">Bahan skin care yang paling cocok untukmu</Divider>
