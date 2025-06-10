@@ -1,14 +1,15 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { CloseOutlined, InboxOutlined } from '@ant-design/icons';
-import { Button, Divider, Image, Typography } from 'antd';
-import axios from 'axios';
-import Dragger from 'antd/es/upload/Dragger';
+import { useState } from "react";
+import { CloseOutlined, InboxOutlined } from "@ant-design/icons";
+import { Button, Divider, Image, Typography } from "antd";
+import axios from "axios";
+import Dragger from "antd/es/upload/Dragger";
+import { SKIN_CARE_INGREDIENTS } from "@/predict/Data/KeyIngredients";
 
 export default function Predict() {
   const predictUrl = process.env.NEXT_PUBLIC_API_URL;
-  const tagline = 'Cek Kulit Wajah Gratis Online';
+  const tagline = "Cek Kulit Wajah Gratis Online";
 
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
@@ -16,36 +17,43 @@ export default function Predict() {
   const [prediction, setPrediction] = useState(null);
 
   const props = {
-    name: 'file',
-    accept: '.jpg,.jpeg,.png',
+    name: "file",
+    accept: ".jpg,.jpeg,.png",
     multiple: false,
-    beforeUpload: ((file) => {
+    beforeUpload: (file) => {
       const url = URL.createObjectURL(file);
       setImageUrl(url);
       setImage(file);
-      return false; // Prevent auto upload
-    }),
+      return false;
+    },
   };
 
   const submit = (status) => {
     if (status) {
       setLoading(true);
       axios
-        .post(`${predictUrl}/predict`, { file: image }, {
-          headers: {
-            'Content-Type': 'multipart/form-data',  // Only set necessary client headers
-          },
-        })
+        .post(
+          `${predictUrl}/predict`,
+          { file: image },
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        )
         .then((res) => {
-          if (res.data.status === 'success') {
+          if (res.data.status === "success") {
             const probability = Math.max(...res.data.data.prob);
-            const index = res.data.data.prob.findIndex((x) => x === probability);
+            const index = res.data.data.prob.findIndex(
+              (x) => x === probability
+            );
+            const skinType = res.data.data.classes[index];
             setPrediction({
               result: res.data.data.classes[index],
-              percentage: (probability * 100).toPrecision(3) + '%',
+              percentage: (probability * 100).toPrecision(3) + "%",
+              ingredients: SKIN_CARE_INGREDIENTS[skinType],
             });
           } else {
-
           }
         })
         .catch((error) => console.error("Error:", error))
@@ -73,18 +81,17 @@ export default function Predict() {
                       <p className="ant-upload-drag-icon">
                         <InboxOutlined />
                       </p>
-                      <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                      <p className="ant-upload-text">
+                        Click or drag file to this area to upload
+                      </p>
                       <p className="ant-upload-hint">
-                        Support for a single or bulk upload. Strictly prohibited from uploading
-                        company data or other banned files.
+                        Support for a single or bulk upload. Strictly prohibited
+                        from uploading company data or other banned files.
                       </p>
                     </Dragger>
                   ) : (
                     <div className="relative w-full rounded-xl border py-6 text-center">
-                      <Image
-                        width={400}
-                        src={imageUrl}
-                      />
+                      <Image width={400} src={imageUrl} />
                       <Button
                         type="link"
                         className="!absolute right-0 top-0 w-0"
@@ -118,25 +125,40 @@ export default function Predict() {
 
                 <div className="w-full space-x-4 rounded-xl border p-6">
                   <div className="flex space-x-6 items-center">
-                    <Image
-                      width={240}
-                      src={imageUrl}
-                    />
+                    <Image width={240} src={imageUrl} />
                     <div className="grow text-center">
-                      <Typography.Title level={3}>{prediction.result}</Typography.Title>
-                      <Typography.Title level={4}>{prediction.percentage}</Typography.Title>
+                      <Typography.Title level={3}>
+                        {prediction.result}
+                      </Typography.Title>
+                      <Typography.Title level={4}>
+                        {prediction.percentage}
+                      </Typography.Title>
                     </div>
                   </div>
-                  <Divider className="!border-gray-400">Bahan skin care yang paling cocok untukmu</Divider>
-                  <ol className="list-decimal list-inside">
-                    <li>Test</li>
-                    <li>Test</li>
-                    <li>Test</li>
+                  <Divider className="!border-gray-400">
+                    Bahan skin care yang paling cocok untukmu
+                  </Divider>
+                  <ol className="list-decimal list-inside space-y-2">
+                    {prediction.ingredients.map((ingredient, index) => (
+                      <li key={index} className="text-sm leading-relaxed">
+                        <strong>{ingredient.split(" - ")[0]}</strong>
+                        {ingredient.includes(" - ") && (
+                          <span className="text-gray-600 ml-1">
+                            - {ingredient.split(" - ")[1]}
+                          </span>
+                        )}
+                      </li>
+                    ))}
                   </ol>
                 </div>
 
                 <div className="flex space-x-6">
-                  <Button size="large" disabled={!image} onClick={() => submit(false)} block>
+                  <Button
+                    size="large"
+                    disabled={!image}
+                    onClick={() => submit(false)}
+                    block
+                  >
                     Analisis Ulang
                   </Button>
                   <Button type="primary" size="large" disabled={!image} block>
