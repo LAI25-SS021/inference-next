@@ -2,8 +2,8 @@ import { Card } from "antd";
 
 export default function Highlights() {
   return (
-    <div className="grid grid-cols-2 gap-6 justify-items-center">
-      <Card className="max-w-80 rounded-xl shadow-md">
+    <div className="grid grid-cols-2 gap-4 justify-items-center">
+      <Card className="max-w-80 rounded-xl shadow-md transition duration-300 hover:bg-blue-200">
         <div className="flex justify-center mb-4">
           <img alt="dry skin" src="/assets/images/pictures.png" />
         </div>
