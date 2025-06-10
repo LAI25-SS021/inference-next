@@ -43,7 +43,7 @@ export default function Welcome() {
             <SkinTypeCard />
           </article>
         </section>
-        <section className="flex h-[120vh] items-center justify-center bg-slate-100">
+        <section className="flex h-[130vh] items-center justify-center bg-slate-100">
           <article className="w-3/4 space-y-12">
             <div className="mx-auto w-fit space-y-4 border-b-2 border-gray-300 px-4 pb-4">
               <h2 className="text-center text-3xl tracking-wide">
