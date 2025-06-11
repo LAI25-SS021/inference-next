@@ -74,7 +74,10 @@ export default function Predict() {
                 <Typography.Title className="block text-center" level={3}>
                   RupaKoe: {tagline}
                 </Typography.Title>
-
+                <p className="text-center" hidden={image}>
+                  Unggah foto wajah Anda,{' '}
+                  <span className="font-semibold">kami tidak akan menyimpannya</span>.
+                </p>
                 <div>
                   {!image ? (
                     <Dragger {...props}>
@@ -91,7 +94,7 @@ export default function Predict() {
                     </Dragger>
                   ) : (
                     <div className="relative w-full rounded-xl border py-6 text-center">
-                      <Image width={400} src={imageUrl} />
+                      <Image className="max-w-40 sm:max-w-96" src={imageUrl} />
                       <Button
                         type="link"
                         className="!absolute right-0 top-0 w-0"
@@ -123,9 +126,9 @@ export default function Predict() {
                   Hasil Analisis
                 </Typography.Title>
 
-                <div className="w-full space-x-4 rounded-xl border p-6">
-                  <div className="flex space-x-6 items-center">
-                    <Image width={240} src={imageUrl} />
+                <div className="w-full gap-4 space-y-4 rounded-xl border p-6">
+                  <div className="flex flex-col sm:flex-row gap-6 items-center">
+                    <Image className="max-w-60" src={imageUrl} />
                     <div className="grow text-center">
                       <Typography.Title level={3}>
                         {prediction.result}
@@ -135,16 +138,25 @@ export default function Predict() {
                       </Typography.Title>
                     </div>
                   </div>
-                  <Divider className="!border-gray-400">
-                    Bahan skin care yang paling cocok untukmu
-                  </Divider>
+                  <div className="flex items-center gap-4">
+                    <hr className="hidden sm:block grow" />
+                    <div>
+                      Bahan skin care yang paling cocok untukmu
+                      <span className="sm:hidden">:</span>
+                    </div>
+                    <hr className="hidden sm:block grow" />
+                  </div>
                   <ol className="list-decimal list-inside space-y-2">
                     {prediction.ingredients.map((ingredient, index) => (
                       <li key={index} className="text-sm leading-relaxed">
-                        <strong>{ingredient.split(" - ")[0]}</strong>
+                        <span className="font-semibold">
+                          {ingredient.split(" - ")[0]}
+                        </span>
+                        <br className="sm:hidden" />
                         {ingredient.includes(" - ") && (
-                          <span className="text-gray-600 ml-1">
-                            - {ingredient.split(" - ")[1]}
+                          <span className="text-gray-600">
+                            <span className="not-sm:hidden mx-1">-</span>
+                            {ingredient.split(" - ")[1]}
                           </span>
                         )}
                       </li>
@@ -160,9 +172,6 @@ export default function Predict() {
                     block
                   >
                     Analisis Ulang
-                  </Button>
-                  <Button type="primary" size="large" disabled={!image} block>
-                    Kirim Feedback
                   </Button>
                 </div>
               </>

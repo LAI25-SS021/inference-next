@@ -13,7 +13,6 @@
 @layer base {
   .link:hover {
     color: #5fa8d3;
-    font-weight: bold;
   }
   .bg-hero {
     background-image: url("/assets/images/RupaKoe2.png");

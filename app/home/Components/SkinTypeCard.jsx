@@ -2,7 +2,7 @@ import { Card } from "antd";
 
 export default function SkinTypeCard() {
   return (
-    <div className="flex justify-between space-x-6">
+    <div className="flex flex-col lg:flex-row items-center justify-center gap-8">
       <Card className="max-w-80 space-y-3 rounded-xl shadow-md">
         <p className="pb-4 text-center text-xl font-bold">Kering</p>
         <img
