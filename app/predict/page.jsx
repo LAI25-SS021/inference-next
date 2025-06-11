@@ -72,7 +72,7 @@ export default function Predict() {
           <div className="mx-auto max-w-lg space-y-8">
             <Link href="/home">
               <Typography.Title className="block text-center" level={3}>
-                <span className="font-caveat text-4xl font-bold link">RupaKoe</span>
+                <span className="font-caveat text-5xl font-bold link">RupaKoe</span>
               </Typography.Title>
             </Link>
             {!prediction ? (
