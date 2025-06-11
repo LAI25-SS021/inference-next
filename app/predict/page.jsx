@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { CloseOutlined, InboxOutlined } from "@ant-design/icons";
-import { Button, Divider, Image, Typography } from "antd";
+import { Button, Image, Typography } from "antd";
+import { SKIN_CARE_INGREDIENTS } from "@/predict/Data/KeyIngredients";
 import axios from "axios";
 import Dragger from "antd/es/upload/Dragger";
-import { SKIN_CARE_INGREDIENTS } from "@/predict/Data/KeyIngredients";
+import Link from "next/link";
 
 export default function Predict() {
   const predictUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -69,13 +70,15 @@ export default function Predict() {
       <div className="w-full overflow-hidden px-12 py-8 sm:max-w-2xl sm:rounded-lg sm:bg-white sm:shadow-md lg:max-w-4xl xl:max-w-6xl">
         <div className="py-16">
           <div className="mx-auto max-w-lg space-y-8">
+            <Link href="/home">
+              <Typography.Title className="block text-center" level={3}>
+                <span className="font-caveat text-4xl font-bold link">RupaKoe</span>
+              </Typography.Title>
+            </Link>
             {!prediction ? (
               <>
-                <Typography.Title className="block text-center" level={3}>
-                  RupaKoe: {tagline}
-                </Typography.Title>
                 <p className="text-center" hidden={image}>
-                  Unggah foto wajah Anda,{' '}
+                  Silakan unggah foto wajah Anda,{' '}
                   <span className="font-semibold">kami tidak akan menyimpannya</span>.
                 </p>
                 <div>
@@ -122,18 +125,17 @@ export default function Predict() {
               </>
             ) : (
               <>
-                <Typography.Title className="block text-center" level={2}>
-                  Hasil Analisis
-                </Typography.Title>
-
                 <div className="w-full gap-4 space-y-4 rounded-xl border p-6">
+                  <Typography.Title className="block text-center" level={3}>
+                    Hasil Analisis
+                  </Typography.Title>
                   <div className="flex flex-col sm:flex-row gap-6 items-center">
                     <Image className="max-w-60" src={imageUrl} />
                     <div className="grow text-center">
-                      <Typography.Title level={3}>
+                      <Typography.Title level={4}>
                         {prediction.result}
                       </Typography.Title>
-                      <Typography.Title level={4}>
+                      <Typography.Title level={5}>
                         {prediction.percentage}
                       </Typography.Title>
                     </div>
