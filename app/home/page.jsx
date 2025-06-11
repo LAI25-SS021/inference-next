@@ -27,7 +27,7 @@ export default function Welcome() {
               jenis kulit berbeda, maka rekomendasi produk perawatan kulit juga
               harus disesuaikan.
             </p>
-            <div className="bg-white">
+            <div className="bg-white w-fit">
               <Button type="primary" size="large" className="!px-8 !py-6 !bg-cyan-600/50 hover:!bg-cyan-600/80" href="/predict">
                 Coba Sekarang
               </Button>
