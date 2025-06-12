@@ -10,7 +10,6 @@ import Link from "next/link";
 
 export default function Predict() {
   const predictUrl = process.env.NEXT_PUBLIC_API_URL;
-  const tagline = "Cek Kulit Wajah Gratis Online";
 
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
@@ -66,7 +65,7 @@ export default function Predict() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-gray-100 sm:justify-center sm:pt-0">
+    <div className="flex min-h-screen flex-col items-center sm:bg-gray-100 sm:justify-center sm:pt-0">
       <div className="w-full overflow-hidden px-12 py-8 sm:max-w-2xl sm:rounded-lg sm:bg-white sm:shadow-md lg:max-w-4xl xl:max-w-6xl">
         <div className="py-16">
           <div className="mx-auto max-w-lg space-y-8">
