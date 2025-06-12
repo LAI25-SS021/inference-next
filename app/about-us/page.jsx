@@ -8,7 +8,7 @@ export default function AboutUs() {
         <NavigationBar />
       </header>
       <main className="sm:pt-[12vh] z-0">
-        <section className="flex items-center justify-center bg-slate-100 bg-hero sm:h-[100vh]">
+        <section className="flex items-center justify-center bg-slate-100 bg-hero h-[100vh]">
           <article className="sm:w-3/4 lg:w-1/2 space-y-8 p-8 bg-gray-50/50">
             <h1 className="text-4xl tracking-wide font-caveat">
               Hai, Kami Rupawan!
